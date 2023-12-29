@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("SUPABASE_DB_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model expenses {
+  name       String
+  date       String
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  user_id    String   @db.Uuid
+  account_id Int
+  budget_id  Int
+  value      String   @default("0")
+  id         Int      @id @default(autoincrement())
+  executed   Boolean  @default(false)
+  accounts   accounts @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  budget     budget   @relation(fields: [budget_id], references: [id], onDelete: Cascade)
+  user       users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model investments {
+  name       String
+  id         Int      @id @default(autoincrement())
+  value      String   @default("0")
+  date       String
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  user_id    String   @db.Uuid
+  account_id Int
+  executed   Boolean  @default(false)
+  accounts   accounts @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  user       users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model income {
+  name       String
+  date       String
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  user_id    String   @db.Uuid
+  account_id Int
+  budget_id  Int
+  value      String   @default("0")
+  id         Int      @id @default(autoincrement())
+  executed   Boolean  @default(false)
+  accounts   accounts @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  budget     budget   @relation(fields: [budget_id], references: [id], onDelete: Cascade)
+  user       users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model users {
+  id           String         @id @db.Uuid
+  name         String         @default("")
+  email        String
+  family_id    Int
+  created_at   DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime       @default(now()) @updatedAt @db.Timestamptz(6)
+  currency     String         @default("eur")
+  locale       String         @default("pt")
+  isUserAdmin  Boolean        @default(false)
+  isMainFamily Boolean        @default(false)
+  defaultTheme String         @default("system")
+  expenses     expenses[]
+  income       income[]
+  userAccounts userAccounts[]
+  family       family         @relation(fields: [family_id], references: [id], onDelete: Cascade)
+  investments  investments[]
+}
+
+model accounts {
+  id           Int            @id @default(autoincrement())
+  name         String
+  description  String
+  active       Boolean
+  created_at   DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime       @default(now()) @updatedAt @db.Timestamptz(6)
+  expenses     expenses[]
+  income       income[]
+  userAccounts userAccounts[]
+  investments  investments[]
+}
+
+model userAccounts {
+  id         Int      @id @default(autoincrement())
+  user_id    String   @db.Uuid
+  account_id Int
+  accounts   accounts @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model family {
+  id         Int      @id @default(autoincrement())
+  name       String
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  budgets    budget[]
+  users      users[]
+}
+
+model budget {
+  id         Int        @id @default(autoincrement())
+  name       String
+  isDefault  Boolean
+  family_id  Int
+  created_at DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at DateTime   @default(now()) @updatedAt @db.Timestamptz(6)
+  value      String     @default("0")
+  typeLaunch TypeLaunch @default(expense)
+  family     family     @relation(fields: [family_id], references: [id], onDelete: Cascade)
+  expenses   expenses[]
+  income     income[]
+}
+
+enum TypeLaunch {
+  income
+  expense
+}
