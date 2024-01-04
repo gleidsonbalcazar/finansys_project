@@ -2,11 +2,12 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 
-import { formatCurrency } from 'lib/formatter';
+import { formatCurrency, formatDate } from 'lib/formatter';
 
 export type recentActivities = {
 	no: string;
 	name: string;
+	data: string;
 	amount: string;
 	budget: string;
 };
@@ -23,6 +24,20 @@ export const columns: ColumnDef<recentActivities>[] = [
 	{
 		accessorKey: 'budget',
 		header: 'Tipo/Orçamento',
+	},
+	{
+		accessorKey: 'data',
+		header: 'Data',
+		cell: (props) => {
+			const {
+				row,
+				table: { options },
+			} = props;
+			const date = row.getValue<string>('data');
+			const dateStyle = { day: 'numeric', month: '2-digit', year: 'numeric' };
+			const formatted = formatDate({ date, locale: 'pt-BR', dateStyle: dateStyle });
+			return <div className="">{formatted}</div>;
+		},
 	},
 	{
 		accessorKey: 'amount',

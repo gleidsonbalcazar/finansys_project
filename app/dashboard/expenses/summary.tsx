@@ -28,8 +28,8 @@ export default function ExpensesSummary() {
 					/>
 						<LastLaunchCard
 						title="Último Lançamento"
-						value={sortedTransactions[0].value}
-						info={sortedTransactions[0].name}
+						value={sortedTransactions[0]?.value}
+						info={sortedTransactions[0]?.name}
 					/>
 				</div>
 			)}

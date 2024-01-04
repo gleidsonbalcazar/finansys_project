@@ -9,8 +9,6 @@ import BalanceCard from 'components/card/balance-card';
 import CardWithProgressBar from 'components/card/card-with-progressbar';
 import { useOverview } from 'components/context/overview-provider';
 import ChartLoader from 'components/loader/chart';
-import RecentActivitiesTable from 'components/recent-activities/table';
-import { Card, CardContent, CardHeader } from 'components/ui/card';
 
 import { extractActualView } from 'lib/extractor';
 
@@ -76,16 +74,7 @@ export default function ActualView() {
 
 				<Charts />
 			</div>
-			<div className="mt-6 mr-4 flex w-full flex-col">
-				<Card className="relative">
-					<CardHeader>
-						<h3 className="pb-0 font-medium">Últimas Atividades</h3>
-					</CardHeader>
-					<CardContent>
-						<RecentActivitiesTable />
-					</CardContent>
-				</Card>
-			</div>
+
 		</>
 	);
 }

@@ -86,8 +86,8 @@ function DatePickerSelect({ onChange, selectedValue }: { onChange: any; selected
 					case '30days': {
 						onChange({
 							selected,
-							from: subDays(new Date(), 30),
-							to: addDays(new Date(), 0),
+							from: startOfMonth(addMonths(new Date(),-1)),
+							to: endOfMonth(addMonths(new Date(),-1)),
 						});
 						break;
 					}
@@ -125,7 +125,7 @@ function DatePickerSelect({ onChange, selectedValue }: { onChange: any; selected
 				<SelectItem value="none">Select</SelectItem>
 				<SelectItem value="tdy">Hoje</SelectItem>
 				<SelectItem value="7days">Últimos 7 dias</SelectItem>
-				<SelectItem value="30days">Últimos 30 dias</SelectItem>
+				<SelectItem value="30days">Último Mês</SelectItem>
 				<SelectItem value="m">Mês atual</SelectItem>
 				<SelectItem value="nm">Próximo Mês</SelectItem>
 				<SelectItem value="y">Ano Atual</SelectItem>

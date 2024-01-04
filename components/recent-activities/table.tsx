@@ -14,6 +14,7 @@ const initialData = {
 	no: '',
 	budget: '',
 	amount: '',
+	data: '',
 	name: '',
 };
 
@@ -55,6 +56,7 @@ export default function RecentActivitiesTable() {
 				no: `${index + 1}.`,
 				budget: datum.budget.name,
 				amount: datum.value,
+				data: datum.created_at,
 				name: datum.name,
 			}))}
 		/>
