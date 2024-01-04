@@ -45,6 +45,7 @@ export const extractRecentData = (
 			...expenses.map((datum) => ({ ...datum, from: 'expenses' })),
 			...income.map((datum) => ({ ...datum, from: 'income' })),
 		];
+		console.log(allData)
 		return sortByKey(allData, 'updated_at').filter((_, index) => index <= 4);
 	}
 	return [];

@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef, RowData } from '@tanstack/react-table';
-import { CheckIcon, CornerDownRight, Pencil, Trash2, X } from 'lucide-react';
+import { Check, CheckIcon, CornerDownRight, Pencil, Trash2, X } from 'lucide-react';
 
 import DataTableColumnHeader from 'components/table/data-table-column-header';
 import { Button } from 'components/ui/button';
@@ -133,7 +133,7 @@ export const columns: ColumnDef<Expenses>[] = [
 					</Button>
 					{ !executed && (
 					<Button className="ml-2 rounded-lg p-0 hover:bg-transparent hover:opacity-70" variant={'ghost'}>
-						<CornerDownRight
+						<Check
 							className="h-4 w-4"
 							onClick={() => {
 								if(meta?.onExecute) meta?.onExecute(row.original?.id);

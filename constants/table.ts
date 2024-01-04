@@ -14,8 +14,16 @@ export const views: Views = {
 		name: 'Esta Semana',
 		key: 'thisWeek',
 	},
+	lastMonth: {
+		name: 'Último Mês',
+		key: 'lastMonth',
+	},
 	thisMonth: {
 		name: 'Este mês',
 		key: 'thisMonth',
+	},
+	nextMonth: {
+		name: 'Próximo Mês',
+		key: 'nextMonth',
 	},
 };

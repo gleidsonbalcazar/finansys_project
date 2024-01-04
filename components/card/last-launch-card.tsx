@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
 
 import { formatCurrency } from 'lib/formatter';
 
-export default function LastLaunchCard({ title, value, info }: any) {
+export default function LastLaunchCard({ title, value = 0, info }: any) {
 	const user = useUser();
 	const valueformated = formatCurrency({ value: value, currency: user.currency, locale: user.locale });
 
@@ -22,7 +22,7 @@ export default function LastLaunchCard({ title, value, info }: any) {
 				<span
 					className={`mt-1 ml-2 overflow-hidden text-ellipsis whitespace-nowrap text-sm tabular-nums text-foreground`}
 				>
-					( {info} )
+					{ title != '' ? ( info ) : ''}
 				</span>
 			</CardContent>
 		</Card>

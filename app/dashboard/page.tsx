@@ -31,6 +31,16 @@ export default async function Page() {
 								<ActualView />
 							</div>
 						</div>
+						<div className="mt-6 mr-4 flex w-full flex-col">
+							<Card className="relative">
+								<CardHeader>
+									<h3 className="pb-0 font-medium">Últimas Atividades</h3>
+								</CardHeader>
+								<CardContent>
+									<RecentActivitiesTable />
+								</CardContent>
+							</Card>
+						</div>
 					</div>
 					<AddData />
 				</OverviewContextProvider>
