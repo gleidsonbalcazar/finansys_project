@@ -39,7 +39,6 @@ type DataTableProps = {
 
 export default function DataTable<TData, TValue>(props: DataTableProps) {
 	const { data, columns, loading, categories, filter, options, filename, hideViewOptions } = props;
-	const [rowSelection, setRowSelection] = useState({})
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -58,7 +57,7 @@ export default function DataTable<TData, TValue>(props: DataTableProps) {
 		getFacetedRowModel: getFacetedRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),
 		onColumnVisibilityChange: setColumnVisibility,
-		state: { sorting, columnFilters, rowSelection, columnVisibility, pagination: {pageIndex: 0, pageSize: 20} },
+		state: { sorting, columnFilters, columnVisibility },
 		meta: options,
 	});
 
