@@ -14,7 +14,6 @@ export default function BudgetsView() {
 	const user = useUser();
 	const { data, loading } = useOverview();
 	const chartData = useMemo<Array<any>>(() => extractOverviewBybudgets(data.expenses, data.budgets, data.income), [data.expenses, data.budgets, data.income]);
-
 	if (loading) {
 		return <ChartLoader className="mb-10 h-[230px] pl-0 pt-0" type="barlist" />;
 	}

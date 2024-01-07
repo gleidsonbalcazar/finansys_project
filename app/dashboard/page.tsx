@@ -7,7 +7,6 @@ import RecentActivitiesTable from 'components/recent-activities/table';
 import { Card, CardContent, CardHeader } from 'components/ui/card';
 
 import AddData from './add-data';
-import Charts from './charts';
 
 export default async function Page() {
 	return (

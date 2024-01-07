@@ -1,9 +1,12 @@
 import React from 'react';
 
 import { ValueFormatter } from '@tremor/react';
+import { Info } from 'lucide-react';
 
 import TableLoader from 'components/table/data-table-loader';
+import { Button } from 'components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'components/ui/tooltip';
 
 import {
 	Color,
@@ -15,7 +18,7 @@ import {
 	spacing,
 	tremorTwMerge,
 } from './lib';
-import { cn } from 'lib/utils';
+import { extractTotalByTypeBudget } from 'lib/extractor';
 
 const makeBarListClassName = makeClassName('BarList');
 
@@ -47,24 +50,24 @@ const getPercentualWidth = (valueExecuted: number, valueBudget: number) => {
 	if (valueExecuted === 0) return 0;
 	if (valueBudget === 0) {
 		valueBudget = 101;
-	};
+	}
 
-	var result = Math.max((valueExecuted/valueBudget??0) * 100, 1);
+	var result = Math.max((valueExecuted / valueBudget ?? 0) * 100, 1);
 
-	if(result > 100){
+	if (result > 100) {
 		return 101;
 	}
 
 	return result;
-}
+};
 
 const getColorBar = (valueExecuted: number, valueBudget: number) => {
 	var result = getPercentualWidth(valueExecuted, valueBudget);
-	if(result > 80 && result <= 100) return 'bg-blue-500';
-	if(result === 0) return 'bg-slate-50 bg-opacity-10';
-	if(result > 100) return  'bg-gradient-to-r from-blue-600/50 to-red-500/100 ';
+	if (result > 80 && result <= 100) return 'bg-blue-500';
+	if (result === 0) return 'bg-slate-50 bg-opacity-10';
+	if (result > 100) return 'bg-gradient-to-r from-blue-600/50 to-red-500/100 ';
 	return 'bg-blue-500';
-}
+};
 
 export interface BarListProps extends React.HTMLAttributes<HTMLDivElement> {
 	data: Bar[];
@@ -74,31 +77,63 @@ export interface BarListProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const BarList = React.forwardRef<HTMLDivElement, BarListProps>((props, ref) => {
-	const {
-		data = [],
-		color,
-		valueFormatter = defaultValueFormatter,
-		showAnimation = false,
-		className,
-		...other
-	} = props;
-
-	const widths = getWidthsFromValues(data.map((item) => item.valueExecuted));
+	const { data = [], color, valueFormatter = defaultValueFormatter, showAnimation = false } = props;
+	const sumExecuted = Math.abs(extractTotalByTypeBudget('expense', data, 'valueExecuted') - extractTotalByTypeBudget('income', data, 'valueExecuted'));
+	const sumNotExecuted = Math.abs(extractTotalByTypeBudget('expense', data, 'valueNotExecuted') - extractTotalByTypeBudget('income', data, 'valueNotExecuted'));
+	const sumBudget =  Math.abs(extractTotalByTypeBudget('expense', data, 'valueBudget') - extractTotalByTypeBudget('income', data, 'valueBudget'));
 	const rowHeight = sizing.threeXl.height;
 
 	return (
 		<Table>
 			<TableHeader className="bg-muted text-tremor-content dark:text-dark-tremor-content">
 				<TableRow key="budget_table_row">
-					<TableHead key="budget" className='text-primary'>Orçamento</TableHead>
-					<TableHead key="budget_executed" className="text-right text-primary">
-						Executado
+					<TableHead key="budget" className="text-primary items-center">
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger asChild>
+										<span className='flex items-center whitespace-break-spaces'>Nome do Orçamento 	<Info width={16} height={16} /></span>
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>Total de {data.length} orçamentos para este período.</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
+					</TableHead>
+					<TableHead key="budget_executed" className="text-right text-primary items-center">
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<span className='flex items-center whitespace-break-spaces justify-end'>Executado 	<Info width={16} height={16} /></span>
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>Valor total de {valueFormatter(+sumExecuted)}.</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
 					</TableHead>
 					<TableHead key="budget_notexecuted" className="text-right text-primary">
-						Não executado
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<span className='flex items-center whitespace-break-spaces justify-end'>Não Executado 	<Info width={16} height={16} /></span>
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>Valor total de {valueFormatter(sumNotExecuted)}.</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
 					</TableHead>
 					<TableHead key="budget_value" className="text-right text-primary">
-						Valor do Orçamento
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<span className='flex items-center whitespace-break-spaces justify-end'>	Valor do Orçamento 	<Info width={16} height={16} /></span>
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>Valor total de {valueFormatter(sumBudget)}.</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
 					</TableHead>
 				</TableRow>
 			</TableHeader>
@@ -108,15 +143,14 @@ const BarList = React.forwardRef<HTMLDivElement, BarListProps>((props, ref) => {
 						<TableRow key={`budget_row_${item.name}`}>
 							<TableCell
 								key="{item.name}"
-								className={
-									tremorTwMerge(
+								className={tremorTwMerge(
 									makeBarListClassName('bar'),
 									'flex items-center rounded-tremor-small bg-opacity-60 mt-2',
 									rowHeight,
 									item.color || color
 										? getColorClassNames(item.color ?? (color as Color), colorPalette.background).bgColor
 										: 'bg-tremor-brand-subtle dark:bg-dark-tremor-brand-subtle dark:bg-opacity-60',
-										getColorBar(item.valueExecuted, item.valueBudget ?? 0),
+									getColorBar(item.valueExecuted, item.valueBudget ?? 0),
 									idx === data.length - 1 ? spacing.none.marginBottom : spacing.sm.marginBottom
 								)}
 								style={{
@@ -124,14 +158,7 @@ const BarList = React.forwardRef<HTMLDivElement, BarListProps>((props, ref) => {
 									transition: showAnimation ? 'all 1s' : '',
 								}}
 							>
-								<p
-		                className={tremorTwMerge(
-		                  makeBarListClassName("barText"),
-		                  "whitespace-nowrap",
-		                )}
-		              >
-		                {item.name}
-		              </p>
+								<p className={tremorTwMerge(makeBarListClassName('barText'), 'whitespace-nowrap')}>{item.name}</p>
 							</TableCell>
 							<TableCell key="{item.valueExecuted}" className="text-right whitespace-nowrap truncate">
 								{valueFormatter(item.valueExecuted)}
