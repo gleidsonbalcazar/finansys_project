@@ -45,7 +45,6 @@ export const extractRecentData = (
 			...expenses.map((datum) => ({ ...datum, from: 'expenses' })),
 			...income.map((datum) => ({ ...datum, from: 'income' })),
 		];
-		console.log(allData)
 		return sortByKey(allData, 'updated_at').filter((_, index) => index <= 4);
 	}
 	return [];
@@ -116,15 +115,18 @@ function findUnassociatedExpenses(budgets: any[], expenses: any[]): number {
 	return unassociatedExpenses.reduce((total,item) => total + parseFloat(item.value),0);
 }
 
+export const extractTotalByTypeBudget = (typeBudget: string, data: Array<any>, attribute: string = 'value') => {
+	return data.filter(f => f.typeLaunch == typeBudget).reduce((total, item) =>  total + parseFloat(item[attribute]),0);
+}
 
 export const extractActualView = (dataExpenses: Array<any>, dataBudgets: Array<any>, dataIncome: Array<any>, dataInvestments: Array<any>) => {
 	const expensesExecuted: number = dataExpenses.filter(f=> f.executed).reduce((total, item) =>  total + parseFloat(item.value),0);
-	const expensesTarget: number = dataBudgets.filter(f => f.typeLaunch == 'expense').reduce((total, item) =>  total + parseFloat(item.value),0);
+	const expensesTarget: number = extractTotalByTypeBudget('expense', dataBudgets, 'value');//dataBudgets.filter(f => f.typeLaunch == 'expense').reduce((total, item) =>  total + parseFloat(item.value),0);
 	const remainingExpensesTotal: number = calculateRemainingExpenses(dataBudgets.filter(f => f.typeLaunch == 'expense'), dataExpenses);
 	const expensesNotPlanned: number = findUnassociatedExpenses(dataBudgets.filter(f => f.typeLaunch == 'expense' && f.isDefault), dataExpenses);
 
 	const incomesExecuted: number = dataIncome.filter(f=> f.executed).reduce((total, item) =>  total + parseFloat(item.value) , 0);
-	const incomesTarget: number = dataBudgets.filter(f => f.typeLaunch == 'income').reduce((total, item) =>  total + parseFloat(item.value) , 0);
+	const incomesTarget: number = extractTotalByTypeBudget('income', dataBudgets, 'value');//dataBudgets.filter(f => f.typeLaunch == 'income').reduce((total, item) =>  total + parseFloat(item.value) , 0);
 	const remainingIncomesTotal: number = calculateRemainingExpenses(dataBudgets.filter(f => f.typeLaunch == 'income'), dataIncome);
 	const incomesNotPlanned: number = findUnassociatedExpenses(dataBudgets.filter(f => f.typeLaunch == 'income' && f.isDefault), dataIncome);
 
@@ -174,7 +176,6 @@ export const extractOverviewBybudgets = (dataExpenses: Array<any>,dataBudgets: A
 		return acc;
 	}, {});
 
-
 	let dataMapOwner = dataBudgets?.map(val => ({
 		id: val.id,
 		name: val.name,
@@ -183,6 +184,7 @@ export const extractOverviewBybudgets = (dataExpenses: Array<any>,dataBudgets: A
 		valueNotExecuted: 0,
 		valueBudget: +val.value,
 		isDefault: val.isDefault,
+		typeLaunch: ''
 	}));
 
 	dataMapOwner.forEach(f => {
@@ -191,9 +193,13 @@ export const extractOverviewBybudgets = (dataExpenses: Array<any>,dataBudgets: A
 		f.value = executed[0]?.value ?? 0 ;
 		f.valueExecuted = executed[0]?.value ?? 0 ;
 		f.valueNotExecuted = notExecuted[0]?.value ?? 0 ;
+		f.typeLaunch = dataExpenses.findIndex(d => d.budget_id  == f.id) != -1 ? 'expense' : 'income';
 	})
 
-	return Object.values(dataMapOwner)
-		.sort(sortValueByAsc);
+	let filteredData = dataMapOwner.filter(item =>
+    item.isDefault || (!item.isDefault && item.value > 0)
+	);
+
+	return Object.values(filteredData).sort((a, b) => a.name.localeCompare(b.name));
 };
 

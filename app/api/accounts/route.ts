@@ -49,8 +49,6 @@ export async function GET(request: NextRequest) {
 				type: 'expense'
 			}));
 
-			//console.log(expensesWithAccountNames)
-
 			const incomes = await prisma.income.findMany({
 				where: {
 					account_id: {
