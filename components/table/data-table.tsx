@@ -26,19 +26,19 @@ type DataTableProps = {
 	data: Array<any>;
 	columns: Array<any>;
 	loading: boolean;
-	filter: { name: string; setFilter: (filter: string) => void; onFilter: (categories: any) => void };
+	filter: { name: string; setFilter: (filter: string) => void; onFilter: (budgets: any) => void };
 	options: { user: any; onDelete: (id: string) => void; onEdit: (data: any) => void; onChange?: (data: any) => void; onExecute?: (data : any) => void};
 	filename: string;
 	hideViewOptions?: boolean | undefined;
-	categories?: {
+	budgets?: {
 		label: string;
 		value: string;
-		icon?: React.ComponentType<{ className?: string }>;
 	}[];
 };
 
 export default function DataTable<TData, TValue>(props: DataTableProps) {
-	const { data, columns, loading, categories, filter, options, filename, hideViewOptions } = props;
+	const { data, columns, loading, budgets, filter, options, filename, hideViewOptions } = props;
+	const [rowSelection, setRowSelection] = useState({})
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -65,7 +65,7 @@ export default function DataTable<TData, TValue>(props: DataTableProps) {
 	return (
 		<div className="mb-8">
 			<DataTableToolbar
-				categories={categories}
+				budgets={budgets}
 				user={options.user}
 				filename={filename}
 				filter={filter}

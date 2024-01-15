@@ -23,11 +23,13 @@ type Props = {
 export const DataContextProvider = (props: Props) => {
 	const { children, name, isNotRange = false } = props;
 	const [filter, setFilter] = useState(views.thisMonth.key);
-	const [categories, setCategories] = useState<string[]>([]);
+	const [budgets, setBudgets] = useState<string[]>([]);
 
 	const { data = [], mutate, isLoading } = useSWR(getApiUrl(filter, name, isNotRange));
-	const onFilter = useCallback((categories: string[] = []) => {
-		setCategories(categories);
+
+	const onFilter = useCallback((budgets: string[] = []) => {
+		//console.log(budgets);
+		setBudgets(budgets);
 	}, []);
 
 
