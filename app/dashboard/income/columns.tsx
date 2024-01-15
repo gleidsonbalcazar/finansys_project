@@ -1,15 +1,17 @@
 'use client';
 
-import { ColumnDef } from '@tanstack/react-table';
-import { CheckIcon, Pencil, Trash2, X, CornerDownRight, Check } from 'lucide-react';
+import { ColumnDef, RowData } from '@tanstack/react-table';
+import { Check, CheckIcon, Pencil, Trash2, X } from 'lucide-react';
 import DataTableColumnHeader from 'components/table/data-table-column-header';
 import { Button } from 'components/ui/button';
 import { formatCurrency, formatDate } from 'lib/formatter';
 
-export type Income = {
+export type Expenses = {
 	name: string;
 	value: string;
 	date: string;
+	updated_at: string,
+	created_at: string,
 	user_id: number;
 	account_id: number;
 	budget_id: number;
@@ -17,7 +19,13 @@ export type Income = {
 	actions: string;
 };
 
-export const columns: ColumnDef<Income>[] = [
+declare module '@tanstack/table-core' {
+	interface ColumnMeta<TData extends RowData, TValue> {
+		isTogglable: boolean;
+	}
+}
+
+export const columns: ColumnDef<Expenses>[] = [
 	{
 		accessorKey: 'name',
 		header: ({ column }) => <DataTableColumnHeader column={column} title="Nome" />,
@@ -42,18 +50,6 @@ export const columns: ColumnDef<Income>[] = [
 		},
 	},
 	{
-		accessorKey: 'accounts',
-		header: ({ column }) => <DataTableColumnHeader column={column} title="Conta" />,
-		cell: ({ row }) => {
-			const account:any = row.getValue('accounts');
-			return (
-				<div className="font-medium">
-					{account.name}
-				</div>
-			);
-		},
-	},
-	{
 		accessorKey: 'value',
 		header: ({ column }) => <DataTableColumnHeader column={column} title="Valor" />,
 		cell: (props) => {
@@ -67,15 +63,44 @@ export const columns: ColumnDef<Income>[] = [
 			return <div className="font-medium tabular-nums">{formatted}</div>;
 		},
 	},
+
 	{
 		accessorKey: 'date',
-		header: ({ column }) => <DataTableColumnHeader column={column} title="Data da Receita" />,
+		header: ({ column }) => <DataTableColumnHeader column={column} title="Data da Despesa" />,
 		cell: (props) => {
 			const {
 				row,
 				table: { options },
 			} = props;
 			const date = row.getValue<string>('date');
+			const dateStyle = { day: 'numeric', month: '2-digit', year: 'numeric' };
+			const formatted = formatDate({ date, locale: 'pt-BR', dateStyle: dateStyle });
+			return <div className="">{formatted}</div>;
+		},
+	},
+	{
+		accessorKey: 'accounts',
+		header: ({ column }) => <DataTableColumnHeader column={column} title="Conta" />,
+		cell: ({ row }) => {
+			const account:any = row.getValue('accounts');
+			return (
+				<div className="font-medium">
+					{account.name}
+				</div>
+			);
+		},
+	},
+
+	{
+		accessorKey: 'created_at',
+		header: ({ column }) => <DataTableColumnHeader column={column} title="Criada em" />,
+		enableHiding: true,
+		cell: (props) => {
+			const {
+				row,
+				table: { options },
+			} = props;
+			const date = row.original.updated_at != null ? row.original.updated_at : row.getValue<string>('created_at');
 			const dateStyle = { day: 'numeric', month: '2-digit', year: 'numeric' };
 			const formatted = formatDate({ date, locale: 'pt-BR', dateStyle: dateStyle });
 			return <div className="">{formatted}</div>;
