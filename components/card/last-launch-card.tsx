@@ -19,11 +19,9 @@ export default function LastLaunchCard({ title, value = 0, info }: any) {
 				>
 					{valueformated}
 				</span>
-				<span
-					className={`mt-1 ml-2 overflow-hidden text-ellipsis whitespace-nowrap text-sm tabular-nums text-foreground`}
-				>
-					{ title != '' ? ( info ) : ''}
-				</span>
+				<p className={`text-ellipsis whitespace-nowrap text-sm text-foreground`}>
+				{ title != '' ? ( info ) : ''}
+				</p>
 			</CardContent>
 		</Card>
 	);
