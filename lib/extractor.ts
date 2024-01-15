@@ -116,6 +116,7 @@ function findUnassociatedExpenses(budgets: any[], expenses: any[]): number {
 }
 
 export const extractTotalByTypeBudget = (typeBudget: string, data: Array<any>, attribute: string = 'value') => {
+	console.log(data);
 	return data.filter(f => f.typeLaunch == typeBudget).reduce((total, item) =>  total + parseFloat(item[attribute]),0);
 }
 
@@ -184,7 +185,7 @@ export const extractOverviewBybudgets = (dataExpenses: Array<any>,dataBudgets: A
 		valueNotExecuted: 0,
 		valueBudget: +val.value,
 		isDefault: val.isDefault,
-		typeLaunch: ''
+		typeLaunch: val.typeLaunch
 	}));
 
 	dataMapOwner.forEach(f => {
@@ -193,7 +194,6 @@ export const extractOverviewBybudgets = (dataExpenses: Array<any>,dataBudgets: A
 		f.value = executed[0]?.value ?? 0 ;
 		f.valueExecuted = executed[0]?.value ?? 0 ;
 		f.valueNotExecuted = notExecuted[0]?.value ?? 0 ;
-		f.typeLaunch = dataExpenses.findIndex(d => d.budget_id  == f.id) != -1 ? 'expense' : 'income';
 	})
 
 	let filteredData = dataMapOwner.filter(item =>

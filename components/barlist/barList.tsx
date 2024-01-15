@@ -78,9 +78,12 @@ export interface BarListProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const BarList = React.forwardRef<HTMLDivElement, BarListProps>((props, ref) => {
 	const { data = [], color, valueFormatter = defaultValueFormatter, showAnimation = false } = props;
-	const sumExecuted = Math.abs(extractTotalByTypeBudget('expense', data, 'valueExecuted') - extractTotalByTypeBudget('income', data, 'valueExecuted'));
-	const sumNotExecuted = Math.abs(extractTotalByTypeBudget('expense', data, 'valueNotExecuted') - extractTotalByTypeBudget('income', data, 'valueNotExecuted'));
-	const sumBudget =  Math.abs(extractTotalByTypeBudget('expense', data, 'valueBudget') - extractTotalByTypeBudget('income', data, 'valueBudget'));
+	const sumExecutedExpense = extractTotalByTypeBudget('expense', data, 'valueExecuted');
+	const sumExecutedIncome = extractTotalByTypeBudget('income', data, 'valueExecuted');
+	const sumNotExecutedExpense = extractTotalByTypeBudget('expense', data, 'valueNotExecuted');
+	const sumNotExecutedIncome = extractTotalByTypeBudget('income', data, 'valueNotExecuted');
+	const sumBudgetExpense = extractTotalByTypeBudget('expense', data, 'valueBudget');
+	const sumBudgetIncome = extractTotalByTypeBudget('income', data, 'valueBudget');
 	const rowHeight = sizing.threeXl.height;
 
 	return (
@@ -106,7 +109,8 @@ const BarList = React.forwardRef<HTMLDivElement, BarListProps>((props, ref) => {
 									<span className='flex items-center whitespace-break-spaces justify-end'>Executado 	<Info width={16} height={16} /></span>
 								</TooltipTrigger>
 								<TooltipContent>
-									<p>Valor total de {valueFormatter(+sumExecuted)}.</p>
+									<p>Receita: {valueFormatter(sumExecutedIncome)}</p>
+									<p>Despesa: {valueFormatter(sumExecutedExpense)}</p>
 								</TooltipContent>
 							</Tooltip>
 						</TooltipProvider>
@@ -118,7 +122,8 @@ const BarList = React.forwardRef<HTMLDivElement, BarListProps>((props, ref) => {
 									<span className='flex items-center whitespace-break-spaces justify-end'>Não Executado 	<Info width={16} height={16} /></span>
 								</TooltipTrigger>
 								<TooltipContent>
-									<p>Valor total de {valueFormatter(sumNotExecuted)}.</p>
+									<p>Receita: {valueFormatter(sumNotExecutedIncome)}</p>
+									<p>Despesa: {valueFormatter(sumNotExecutedExpense)}</p>
 								</TooltipContent>
 							</Tooltip>
 						</TooltipProvider>
@@ -130,7 +135,8 @@ const BarList = React.forwardRef<HTMLDivElement, BarListProps>((props, ref) => {
 									<span className='flex items-center whitespace-break-spaces justify-end'>	Valor do Orçamento 	<Info width={16} height={16} /></span>
 								</TooltipTrigger>
 								<TooltipContent>
-									<p>Valor total de {valueFormatter(sumBudget)}.</p>
+									<p>Receita: {valueFormatter(sumBudgetIncome)}</p>
+									<p>Despesa: {valueFormatter(sumBudgetExpense)}</p>
 								</TooltipContent>
 							</Tooltip>
 						</TooltipProvider>
