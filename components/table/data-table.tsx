@@ -57,7 +57,7 @@ export default function DataTable<TData, TValue>(props: DataTableProps) {
 		getFacetedRowModel: getFacetedRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),
 		onColumnVisibilityChange: setColumnVisibility,
-		state: { sorting, columnFilters, rowSelection, columnVisibility, pagination: {pageIndex: 0, pageSize: 20} },
+		state: { sorting, columnFilters, columnVisibility },
 		meta: options,
 	});
 
