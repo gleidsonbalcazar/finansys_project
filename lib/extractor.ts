@@ -116,7 +116,7 @@ function findUnassociatedExpenses(budgets: any[], expenses: any[]): number {
 }
 
 export const extractTotalByTypeBudget = (typeBudget: string, data: Array<any>, attribute: string = 'value') => {
-	console.log(data);
+	//console.log(data);
 	return data.filter(f => f.typeLaunch == typeBudget).reduce((total, item) =>  total + parseFloat(item[attribute]),0);
 }
 

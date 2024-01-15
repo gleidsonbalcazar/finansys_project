@@ -7,11 +7,8 @@ import { useUser } from 'components/context/auth-provider';
 import { useData } from 'components/context/data-provider';
 import DataTable from 'components/table/data-table';
 import { useToast } from 'components/ui/use-toast';
-
 import { lookup } from 'lib/lookup';
-
 import messages from 'constants/messages';
-
 import { ExpenseData, deleteExpense, executeExpense } from './apis';
 import { columns } from './columns';
 
@@ -19,6 +16,12 @@ import { columns } from './columns';
 export default function ExpenseTable() {
 	const [selected, setSelected] = useState({});
 	const { data, loading, filter, mutate } = useData();
+	const uniqueBudgetsSet  = new Set(data?.map((expense: { budget: any; }) => JSON.stringify(expense.budget)));
+	const uniqueBudgets: any[] = Array.from(uniqueBudgetsSet).map((jsonString: any) => JSON.parse(jsonString)).map((bud: any) => ({
+		label: bud.name,
+		value: bud.name
+	}));
+
 	const user = useUser();
 	const { toast } = useToast();
 
@@ -61,6 +64,7 @@ export default function ExpenseTable() {
 				options={{ user, onDelete, onEdit, onExecute }}
 				filter={filter}
 				columns={columns}
+				budgets={uniqueBudgets}
 				data={data}
 				loading={loading}
 				filename="despesas"

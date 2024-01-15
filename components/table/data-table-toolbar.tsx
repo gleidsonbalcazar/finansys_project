@@ -24,14 +24,14 @@ interface DataTableToolbarProps<TData> {
 	className?: String;
 	loading: boolean;
 	hideViewOptions?: boolean | undefined;
-	user: { locale: string; currency: string; isPremium: boolean };
+	user: { locale: string; currency: string };
 	filter: { name: string; setFilter: (filter: string) => void; onFilter?: (filterData: any) => void };
 	filename: string;
-	categories?: { label: string; value: string; icon?: React.ComponentType<{ className?: string }> }[];
+	budgets?: { label: string; value: string }[];
 }
 
 export default function DataTableToolbar<TData>(props: DataTableToolbarProps<TData>) {
-	const { table, className, loading, categories, filter, user, filename, hideViewOptions = false } = props;
+	const { table, className, loading, budgets, filter, user, filename, hideViewOptions = false } = props;
 	const { toast } = useToast();
 	const isFiltered = table.getState().columnFilters.length > 0;
 	return (
@@ -44,15 +44,15 @@ export default function DataTableToolbar<TData>(props: DataTableToolbarProps<TDa
 					onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
 					className="mr-1.5 h-8 w-full sm:w-[200px] md:w-[300px]"
 				/>
-				{/* {categories?.length && table.getColumn('category') ? (
+				{budgets?.length && table.getColumn('budget') ? (
 					<DataTableFacetedFilter
 						disabled={loading}
-						column={table.getColumn('category')}
-						title="Category"
+						column={table.getColumn('budget')}
+						title="Orçamento"
 						onFilter={filter.onFilter}
-						options={categories}
+						options={budgets}
 					/>
-				) : null} */}
+				) : null}
 				{isFiltered && (
 					<Button
 						variant="secondary"
