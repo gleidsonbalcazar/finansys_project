@@ -7,8 +7,6 @@ import {
 	isFuture,
 	isToday,
 	isValid,
-	subMonths,
-	subYears,
 } from 'date-fns';
 
 export const calculateRenewalDate = (date: string, paid: string) => {
@@ -30,22 +28,6 @@ export const calculateRenewalDate = (date: string, paid: string) => {
 	return addYears(yearRenewalDate, 1);
 };
 
-export const calculatePrevRenewalDate = (date: Date, paid: string) => {
-	let previousRenewalDate = null;
-	const startDate = new Date(date);
-
-	if (isFuture(startDate)) {
-		return startDate;
-	}
-
-	if (paid === 'monthly') {
-		previousRenewalDate = subMonths(date, 1);
-		return previousRenewalDate > startDate ? previousRenewalDate : startDate;
-	}
-
-	previousRenewalDate = subYears(date, 1);
-	return previousRenewalDate > startDate ? previousRenewalDate : startDate;
-};
 
 export const calculatePaidDates = (datum: any, start: string, end: string): Array<Date> => {
 	if (!start || !end) return [];
