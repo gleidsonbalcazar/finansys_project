@@ -115,10 +115,79 @@ function findUnassociatedExpenses(budgets: any[], expenses: any[]): number {
 	return unassociatedExpenses.reduce((total,item) => total + parseFloat(item.value),0);
 }
 
+function groupByMonthAndBudget(items: any[]): Record<string, Record<string, number>> {
+	const groupedItems: Record<string, Record<string, number>> = {};
+
+	for (const item of items) {
+			const monthYearKey = new Date(item.date).toLocaleDateString('en-US', {
+					month: 'short',
+					year: '2-digit',
+			});
+			const budgetName = item.budget.name;
+
+			if (!groupedItems[monthYearKey]) {
+					groupedItems[monthYearKey] = {};
+			}
+
+			if (!groupedItems[monthYearKey][budgetName]) {
+					groupedItems[monthYearKey][budgetName] = 0;
+			}
+
+			groupedItems[monthYearKey][budgetName] += parseFloat(item.value);
+	}
+
+	return groupedItems;
+}
+
 export const extractTotalByTypeBudget = (typeBudget: string, data: Array<any>, attribute: string = 'value') => {
-	//console.log(data);
 	return data.filter(f => f.typeLaunch == typeBudget).reduce((total, item) =>  total + parseFloat(item[attribute]),0);
 }
+
+export const extractProgressionBudgets = (dataExpenses: Array<any>,dataBudgets: Array<any>,dataIncome: Array<any>) => {
+	const budgets_ids = [28,14];
+	console.log(dataExpenses.concat(dataIncome))
+  const dataExtracted = dataExpenses.concat(dataIncome).filter(f => budgets_ids.indexOf(f.budget_id) != -1);
+	console.log(budgets_ids, dataExtracted);
+
+	const groupedByMonthAndBudget  = groupByMonthAndBudget(dataExtracted);
+	const resultArray = Object.entries(groupedByMonthAndBudget).map(([date, budgets]) => ({
+    date,
+    ...budgets,
+	})).sort((a, b) => {
+		const dateA = new Date(a.date);
+		const dateB = new Date(b.date);
+
+		return dateA.toLocaleDateString().localeCompare(dateB.toLocaleDateString());
+	});
+	console.log(resultArray);
+
+	// const dataMapExecuted = dataExtracted.filter(f=> f.executed).reduce<DatumReturn>((acc: any, datum: any) => {
+	// 	acc[datum.budget_id] = {
+	// 		id: `${datum.budget_id}`,
+	// 		name: `${datum.name}`,
+	// 		month: `${new Date(datum.date).getMonth() + 1}`,
+	// 		value: acc[datum.budget_id] ? Number(acc[datum.budget_id].value) + Number(datum.value) : Number(datum.value),
+	// 	};
+	// 	return acc;
+	// }, {});
+
+	// console.log(dataMapExecuted);
+
+	// let dataMapOwner = dataBudgets?.map(val => ({
+	// 	id: val.id,
+	// 	name: val.name,
+	// 	month: val.month,
+	// 	value: 0,
+	// 	typeLaunch: val.typeLaunch
+	// }));
+
+	// dataMapOwner.forEach(f => {
+	// 	let executed = Object.values(dataMapExecuted).filter(d => d.id == f.id);
+	// 	f.value = executed[0]?.value ?? 0 ;
+	// })
+
+	return Object.values(resultArray);
+};
 
 export const extractActualView = (dataExpenses: Array<any>, dataBudgets: Array<any>, dataIncome: Array<any>, dataInvestments: Array<any>) => {
 	const expensesExecuted: number = dataExpenses.filter(f=> f.executed).reduce((total, item) =>  total + parseFloat(item.value),0);

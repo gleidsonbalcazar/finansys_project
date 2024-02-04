@@ -1,14 +1,12 @@
 'use client';
 
 import { useMemo } from 'react';
-
-import Charts from 'app/dashboard/charts';
 import { BadgeMinusIcon, BadgePlusIcon, LandmarkIcon, Wallet2Icon } from 'lucide-react';
-
 import BalanceCard from 'components/card/balance-card';
 import CardWithProgressBar from 'components/card/card-with-progressbar';
 import { useOverview } from 'components/context/overview-provider';
 import ChartLoader from 'components/loader/chart';
+import LineBudgetsChartView from 'components/chart/lineBudgetsChart-view';
 
 import { extractActualView } from 'lib/extractor';
 
@@ -71,10 +69,10 @@ export default function ActualView() {
 					type={TypeSummaryEnum.Investments}
 				/>
 				<BalanceCard title="Saldo nas Contas" accounts={data.accounts} icon={LandmarkIcon} />
-
-				<Charts />
 			</div>
-
+			<div className="mt-4">
+				{/* <LineBudgetsChartView /> */}
+			</div>
 		</>
 	);
 }

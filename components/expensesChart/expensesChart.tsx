@@ -1,19 +1,12 @@
 'use client';
 
 import { useMemo } from 'react';
-
 import { BarChart } from '@tremor/react';
-
 import { useUser } from 'components/context/auth-provider';
 import { useOverview } from 'components/context/overview-provider';
 import ChartLoader from 'components/loader/chart';
-
 import { extractBudgets, extractChartAxis, extractValues } from 'lib/extractor';
 import { formatCurrency } from 'lib/formatter';
-
-const dataFormatter = (number: number) => {
-	return '$ ' + Intl.NumberFormat('us').format(number).toString();
-};
 
 export default function ExpensesChart() {
 	const user = useUser();

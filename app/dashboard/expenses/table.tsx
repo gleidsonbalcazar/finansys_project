@@ -21,6 +21,11 @@ export default function ExpenseTable() {
 		label: bud.name,
 		value: bud.name
 	}));
+	const uniqueAccountsSet  = new Set(data?.map((expense: { accounts: any; }) => JSON.stringify(expense.accounts)));
+	const uniqueAccounts: any[] = Array.from(uniqueAccountsSet).map((jsonString: any) => JSON.parse(jsonString)).map((bud: any) => ({
+		label: bud.name,
+		value: bud.name
+	}));
 
 	const user = useUser();
 	const { toast } = useToast();
@@ -65,6 +70,7 @@ export default function ExpenseTable() {
 				filter={filter}
 				columns={columns}
 				budgets={uniqueBudgets}
+				accounts={uniqueAccounts}
 				data={data}
 				loading={loading}
 				filename="despesas"
