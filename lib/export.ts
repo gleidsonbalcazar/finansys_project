@@ -8,10 +8,10 @@ const excludeLastColumnIndex = 1;
 export const exportTableToCsv = (filename: string) => {
 	const rows = document.querySelectorAll('table tr');
 
-	const csv = [];
+	const csv:any[] = [];
 
 	for (var i = 0; i < rows.length; i++) {
-		var row = [];
+		var row:any[] = [];
 		var cols = rows[i].querySelectorAll<any>('td, th');
 		for (var j = 0; j < cols.length - excludeLastColumnIndex; j++) {
 			var data = cols[j]?.innerText?.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ');
