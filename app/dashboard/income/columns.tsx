@@ -48,6 +48,10 @@ export const columns: ColumnDef<Expenses>[] = [
 				</div>
 			);
 		},
+		filterFn: (row, id, value) => {
+			var rowValue:any = row.getValue(id);
+			return value.includes(rowValue.name);
+		},
 	},
 	{
 		accessorKey: 'value',
@@ -88,6 +92,10 @@ export const columns: ColumnDef<Expenses>[] = [
 					{account.name}
 				</div>
 			);
+		},
+		filterFn: (row, id, value) => {
+			var rowValue:any = row.getValue(id);
+			return value.includes(rowValue.name);
 		},
 	},
 

@@ -28,10 +28,11 @@ interface DataTableToolbarProps<TData> {
 	filter: { name: string; setFilter: (filter: string) => void; onFilter?: (filterData: any) => void };
 	filename: string;
 	budgets?: { label: string; value: string }[];
+	accounts?: { label: string; value: string }[];
 }
 
 export default function DataTableToolbar<TData>(props: DataTableToolbarProps<TData>) {
-	const { table, className, loading, budgets, filter, user, filename, hideViewOptions = false } = props;
+	const { table, className, loading, budgets, accounts, filter, user, filename, hideViewOptions = false } = props;
 	const { toast } = useToast();
 	const isFiltered = table.getState().columnFilters.length > 0;
 	return (
@@ -51,6 +52,15 @@ export default function DataTableToolbar<TData>(props: DataTableToolbarProps<TDa
 						title="Orçamento"
 						onFilter={filter.onFilter}
 						options={budgets}
+					/>
+				) : null}
+				{accounts?.length && table.getColumn('accounts') ? (
+					<DataTableFacetedFilter
+						disabled={loading}
+						column={table.getColumn('accounts')}
+						title="Contas"
+						onFilter={filter.onFilter}
+						options={accounts}
 					/>
 				) : null}
 				{isFiltered && (

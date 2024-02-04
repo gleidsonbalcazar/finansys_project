@@ -34,10 +34,14 @@ type DataTableProps = {
 		label: string;
 		value: string;
 	}[];
+	accounts?: {
+		label: string;
+		value: string;
+	}[];
 };
 
 export default function DataTable<TData, TValue>(props: DataTableProps) {
-	const { data, columns, loading, budgets, filter, options, filename, hideViewOptions } = props;
+	const { data, columns, loading, budgets, accounts, filter, options, filename, hideViewOptions } = props;
 	const [rowSelection, setRowSelection] = useState({})
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -66,6 +70,7 @@ export default function DataTable<TData, TValue>(props: DataTableProps) {
 		<div className="mb-8">
 			<DataTableToolbar
 				budgets={budgets}
+				accounts={accounts}
 				user={options.user}
 				filename={filename}
 				filter={filter}

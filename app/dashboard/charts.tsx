@@ -2,7 +2,6 @@
 
 import ExpensesChart from 'components/expensesChart/expensesChart';
 import IncomesChart from 'components/incomesChart/incomesChart';
-import RecentActivitiesTable from 'components/recent-activities/table';
 import { Card, CardContent, CardHeader } from 'components/ui/card';
 
 export default function Charts() {

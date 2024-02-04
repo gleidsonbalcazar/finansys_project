@@ -1,9 +1,7 @@
 import { useUser } from 'components/context/auth-provider';
 import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
 import ProgressBar from 'components/ui/progressBar';
-
 import { formatCurrency } from 'lib/formatter';
-
 import { TypeSummaryEnum } from 'constants/type-summary.enum';
 
 type Summary = { title: String; valueActual: number; valueTarget?: number; valueNotPlanned?: number, valueRemaining?: number, icon?: any, type: TypeSummaryEnum};

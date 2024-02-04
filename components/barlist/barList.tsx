@@ -4,7 +4,6 @@ import { ValueFormatter } from '@tremor/react';
 import { Info } from 'lucide-react';
 
 import TableLoader from 'components/table/data-table-loader';
-import { Button } from 'components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'components/ui/tooltip';
 
