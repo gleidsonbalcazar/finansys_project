@@ -1,36 +1,21 @@
 import { LineChart } from "@tremor/react";
 import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
 import { extractProgressionBudgets } from 'lib/extractor';
-import { useMemo } from 'react';
+import { JSXElementConstructor, Key, PromiseLikeOfReactNode, ReactElement, ReactNode, ReactPortal, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { apiUrls } from 'lib/apiUrls';
 import { addMonths, endOfMonth, format, startOfMonth } from 'date-fns';
-import { useDate } from '../context/datepicker-provider';
 import { dateFormat } from 'constants/date';
-
-const chartdata4 = [
-  {
-    date: "Jan 23",
-    Combustível: 167,
-		Feira: 152
-  },
-  {
-    date: "Feb 23",
-    Combustível: 125,
-		Feira: 15
-  },
-  {
-    date: "Mar 23",
-    Combustível: 156,
-		Feira: 1
-  },
-];
+import { Label } from "components/ui/label";
+import { Combobox } from "components/combobox";
+import { formatCurrency } from "lib/formatter";
+import { useUser } from "components/context/auth-provider";
 
 const customTooltip = ({ payload, active }) => {
   if (!active || !payload) return null;
   return (
     <div className="w-56 rounded-tremor-default text-tremor-default bg-tremor-background p-2 shadow-tremor-dropdown border border-tremor-border">
-      {payload.map((category, idx) => (
+      {payload.map((category: { color: any; dataKey: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | PromiseLikeOfReactNode | null | undefined; value: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | PromiseLikeOfReactNode | null | undefined; }, idx: Key | null | undefined) => (
         <div key={idx} className="flex flex-1 space-x-2.5">
           <div className={`w-1 flex flex-col bg-${category.color}-500 rounded`} />
           <div className="space-y-1">
@@ -43,40 +28,40 @@ const customTooltip = ({ payload, active }) => {
   );
 };
 
-export default function LineBudgetsChartView()
+export default function LineBudgetsChartView({budgets})
 {
-	const { date } = useDate();
-	date.from = startOfMonth(addMonths(new Date(),-3));
-	date.end = endOfMonth(addMonths(new Date(),-1));
-
-	const from = format(date.from || date.to, dateFormat);
-	const to = format(date.to || date.from, dateFormat);
+	let dateFrom = startOfMonth(addMonths(new Date(),-3));
+	let dateEnd = endOfMonth(new Date());
+	const user = useUser();
+	const from = format(dateFrom || dateEnd, dateFormat);
+	const to = format(dateEnd || dateFrom, dateFormat);
 	const {
 		data: expensesData = [],
 		isLoading: isExpenseLoading,
 		mutate: mutateExpenses,
 	} = useSWR(apiUrls.expenses.getExpenses({ from, to }));
 	const { data: incomeData = [], isLoading: isIncomeLoading, mutate: mutateIncomes } = useSWR(apiUrls.income.getIncome({ from, to }));
-	const { data: budgetsData = [], isLoading: isBudgetLoading, mutate: mutateBudget } = useSWR(apiUrls.budget.getBudget({typeLaunch: "all"}));
+
+	const budgetData = Object.keys(budgets)
+	.map((key) => { return { label: budgets[key].name, value: budgets[key].id }; });
 
 	const data = {
 		expenses: expensesData,
 		income: incomeData,
-		budgets: budgetsData,
+		budgets: budgets,
 		mutate: {
 			mutateExpenses,
 			mutateIncomes,
-			mutateBudget,
 		},
 	};
 
-	const chartData = useMemo<Array<any>>(() => extractProgressionBudgets(data.expenses, data.budgets, data.income), [data.expenses, data.budgets, data.income]);
-	const budgets_ids = [28,14];
-	//console.log(data.budgets);
-	const categories = data.budgets.filter(f => budgets_ids.indexOf(f.id) != -1).map(m => m.name);
-	console.log(categories);
-	console.log(chartData);
+	const [budget, setBudget] = useState<any>();
+	const chartData = useMemo<Array<any>>(() => extractProgressionBudgets(data.expenses, data.income, budget), [data.expenses, data.income, budget]);
+	const categories = data.budgets.filter((f: { id: any; }) =>f.id == budget).map((m: { name: any; }) => m.name);
 
+	const valueFormatter = function(value){
+		return formatCurrency({ value, currency: user.currency, locale: user.locale })
+	}
 
 	return (
 		<>
@@ -85,14 +70,29 @@ export default function LineBudgetsChartView()
 					<CardTitle className="text-xs font-semibold uppercase text-muted-foreground">Últimos 3 meses por Tipo de Orçamento</CardTitle>
 				</CardHeader>
 				<CardContent>
+					<div className="mr-3">
+						<Label htmlFor="budget">Orçamento</Label>
+						<Combobox
+							data={budgetData}
+							selected={budget}
+							onChange={(value:any) => {
+								setBudget(+value);
+							}} />
+					</div>
+					<div className="mr-3">
 					<LineChart
 						className="h-72 mt-4 "
 						data={chartData}
 						index="date"
 						categories={categories}
 						colors={["blue"]}
-						yAxisWidth={30}
-						customTooltip={customTooltip} />
+						yAxisWidth={60}
+						showGridLines={true}
+						noDataText="Não há informações para este filtro"
+						customTooltip={customTooltip}
+						valueFormatter={valueFormatter}
+						/>
+					</div>
 				</CardContent>
 			</Card>
 		</>
