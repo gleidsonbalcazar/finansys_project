@@ -59,7 +59,7 @@ export default function ActualView() {
 					icon={BadgeMinusIcon}
 					type={TypeSummaryEnum.Expense}
 				/>
-				<CardWithProgressBar
+				{/* <CardWithProgressBar
 					title="Investimentos"
 					valueActual={infoData.investmentsExecuted}
 					valueTarget={infoData.investmentsTarget}
@@ -67,11 +67,13 @@ export default function ActualView() {
 					valueRemaining={infoData.remainingInvesmentsTotal}
 					icon={Wallet2Icon}
 					type={TypeSummaryEnum.Investments}
-				/>
+				/> */}
+			</div>
+			<div className="mt-4">
 				<BalanceCard title="Saldo nas Contas" accounts={data.accounts} icon={LandmarkIcon} />
 			</div>
 			<div className="mt-4">
-				{/* <LineBudgetsChartView /> */}
+				<LineBudgetsChartView budgets={data.budgets}/>
 			</div>
 		</>
 	);

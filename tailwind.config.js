@@ -97,7 +97,7 @@ module.exports = {
 						emphasis: '#d1d5db', // gray-300
 					},
 					border: {
-						DEFAULT: '#09090c', // border-border
+						DEFAULT: '#f2f2f2', // border-border
 					},
 					ring: {
 						DEFAULT: '#1f2937', // gray-800

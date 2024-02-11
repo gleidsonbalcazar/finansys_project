@@ -82,22 +82,22 @@ export const extractTopExpenseCategories = (data: Array<Object>) => {
 		.filter((_, index) => index <= 5);
 };
 
-function calculateRemainingExpenses(budgets: any[], expenses: any[]): number {
+function calculateRemainingLaunch(budgets: any[], launch: any[]): number {
 	let remainingTotal = 0;
 
 	budgets.forEach(budget => {
-			const correspondingExpenses = expenses.filter(expense => expense.budget_id === budget.id && expense.executed);
+			const correspondingLaunch = launch.filter(l => l.budget_id === budget.id && l.executed);
 
-			if (correspondingExpenses.length > 0) {
-					const executedExpensesTotal = correspondingExpenses.reduce((total, expense) => total + parseFloat(expense.value), 0);
-					const remainingAmount = parseFloat(budget.value) - executedExpensesTotal;
+			if (correspondingLaunch.length > 0) {
+					const executedLaunchTotal = correspondingLaunch.reduce((total, launch) => total + parseFloat(launch.value), 0);
+					const remainingAmount = parseFloat(budget.value) - executedLaunchTotal;
 					remainingTotal += remainingAmount;
 			} else {
 					remainingTotal += parseFloat(budget.value);
 			}
 	});
 
-	return remainingTotal;
+	return remainingTotal < 0 ? remainingTotal * -1 : remainingTotal;
 }
 
 function findUnassociatedExpenses(budgets: any[], expenses: any[]): number {
@@ -143,12 +143,8 @@ export const extractTotalByTypeBudget = (typeBudget: string, data: Array<any>, a
 	return data.filter(f => f.typeLaunch == typeBudget).reduce((total, item) =>  total + parseFloat(item[attribute]),0);
 }
 
-export const extractProgressionBudgets = (dataExpenses: Array<any>,dataBudgets: Array<any>,dataIncome: Array<any>) => {
-	const budgets_ids = [28,14];
-	console.log(dataExpenses.concat(dataIncome))
-  const dataExtracted = dataExpenses.concat(dataIncome).filter(f => budgets_ids.indexOf(f.budget_id) != -1);
-	console.log(budgets_ids, dataExtracted);
-
+export const extractProgressionBudgets = (dataExpenses: Array<any>,dataIncome: Array<any>, budgetSelected: Array<any>) => {
+  const dataExtracted = dataExpenses.concat(dataIncome).filter(f => budgetSelected.indexOf(f.budget_id) != -1);
 	const groupedByMonthAndBudget  = groupByMonthAndBudget(dataExtracted);
 	const resultArray = Object.entries(groupedByMonthAndBudget).map(([date, budgets]) => ({
     date,
@@ -159,7 +155,7 @@ export const extractProgressionBudgets = (dataExpenses: Array<any>,dataBudgets: 
 
 		return dateA.toLocaleDateString().localeCompare(dateB.toLocaleDateString());
 	});
-	console.log(resultArray);
+	//console.log(resultArray);
 
 	// const dataMapExecuted = dataExtracted.filter(f=> f.executed).reduce<DatumReturn>((acc: any, datum: any) => {
 	// 	acc[datum.budget_id] = {
@@ -192,18 +188,18 @@ export const extractProgressionBudgets = (dataExpenses: Array<any>,dataBudgets: 
 export const extractActualView = (dataExpenses: Array<any>, dataBudgets: Array<any>, dataIncome: Array<any>, dataInvestments: Array<any>) => {
 	const expensesExecuted: number = dataExpenses.filter(f=> f.executed).reduce((total, item) =>  total + parseFloat(item.value),0);
 	const expensesTarget: number = extractTotalByTypeBudget('expense', dataBudgets, 'value');//dataBudgets.filter(f => f.typeLaunch == 'expense').reduce((total, item) =>  total + parseFloat(item.value),0);
-	const remainingExpensesTotal: number = calculateRemainingExpenses(dataBudgets.filter(f => f.typeLaunch == 'expense'), dataExpenses);
+	const remainingExpensesTotal: number = calculateRemainingLaunch(dataBudgets.filter(f => f.typeLaunch == 'expense'), dataExpenses);
 	const expensesNotPlanned: number = findUnassociatedExpenses(dataBudgets.filter(f => f.typeLaunch == 'expense' && f.isDefault), dataExpenses);
 
 	const incomesExecuted: number = dataIncome.filter(f=> f.executed).reduce((total, item) =>  total + parseFloat(item.value) , 0);
 	const incomesTarget: number = extractTotalByTypeBudget('income', dataBudgets, 'value');//dataBudgets.filter(f => f.typeLaunch == 'income').reduce((total, item) =>  total + parseFloat(item.value) , 0);
-	const remainingIncomesTotal: number = calculateRemainingExpenses(dataBudgets.filter(f => f.typeLaunch == 'income'), dataIncome);
+	const remainingIncomesTotal: number = calculateRemainingLaunch(dataBudgets.filter(f => f.typeLaunch == 'income'), dataIncome);
 	const incomesNotPlanned: number = findUnassociatedExpenses(dataBudgets.filter(f => f.typeLaunch == 'income' && f.isDefault), dataIncome);
 
-	const investmentsExecuted: number = dataInvestments.filter(f => f.executed).reduce((total, item) =>  total + parseFloat(item.value),0);
-	const investmentsTarget: number = dataBudgets.filter(f => f.typeLaunch == 'investment').reduce((total, item) =>  total + parseFloat(item.value) , 0);
-	const remainingInvestmentsTotal: number = calculateRemainingExpenses(dataBudgets.filter(f => f.typeLaunch == 'investment'), dataInvestments);
-	const investmentsNotPlanned: number = findUnassociatedExpenses(dataBudgets.filter(f => f.typeLaunch == 'investment'), dataInvestments);
+	// const investmentsExecuted: number = dataInvestments.filter(f => f.executed).reduce((total, item) =>  total + parseFloat(item.value),0);
+	// const investmentsTarget: number = dataBudgets.filter(f => f.typeLaunch == 'investment').reduce((total, item) =>  total + parseFloat(item.value) , 0);
+	// const remainingInvestmentsTotal: number = calculateRemainingExpenses(dataBudgets.filter(f => f.typeLaunch == 'investment'), dataInvestments);
+	// const investmentsNotPlanned: number = findUnassociatedExpenses(dataBudgets.filter(f => f.typeLaunch == 'investment'), dataInvestments);
 
 
 	let dataMapOwner = {
@@ -215,10 +211,10 @@ export const extractActualView = (dataExpenses: Array<any>, dataBudgets: Array<a
 		incomesTarget,
 		remainingIncomesTotal,
 		incomesNotPlanned,
-		investmentsExecuted,
-		investmentsTarget,
-		remainingInvestmentsTotal,
-		investmentsNotPlanned
+		// investmentsExecuted,
+		// investmentsTarget,
+		// remainingInvestmentsTotal,
+		// investmentsNotPlanned
 	} as any;
 
 	return dataMapOwner;
