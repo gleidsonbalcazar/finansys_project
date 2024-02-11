@@ -143,8 +143,8 @@ export const extractTotalByTypeBudget = (typeBudget: string, data: Array<any>, a
 	return data.filter(f => f.typeLaunch == typeBudget).reduce((total, item) =>  total + parseFloat(item[attribute]),0);
 }
 
-export const extractProgressionBudgets = (dataExpenses: Array<any>,dataIncome: Array<any>, budgetSelected) => {
-  const dataExtracted = dataExpenses.concat(dataIncome).filter(f => f.budget_id == budgetSelected);
+export const extractProgressionBudgets = (dataExpenses: Array<any>,dataIncome: Array<any>, budgetSelected: Array<any>) => {
+  const dataExtracted = dataExpenses.concat(dataIncome).filter(f => budgetSelected.indexOf(f.budget_id) != -1);
 	const groupedByMonthAndBudget  = groupByMonthAndBudget(dataExtracted);
 	const resultArray = Object.entries(groupedByMonthAndBudget).map(([date, budgets]) => ({
     date,
