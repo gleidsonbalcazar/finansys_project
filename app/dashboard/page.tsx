@@ -1,5 +1,5 @@
 import ActualView from 'components/chart/actual-view';
-import BudgetsView from 'components/chart/budgets-view';
+import GeneralViewByBudgets from 'components/chart/general-view-budgets';
 import { DatePickerProvider } from 'components/context/datepicker-provider';
 import { OverviewContextProvider } from 'components/context/overview-provider';
 import LayoutHeader from 'components/layout/header';
@@ -18,12 +18,7 @@ export default async function Page() {
 						<div className="grid lg:grid-cols-2 grid-cols-[50%,50%] gap-8">
 							<div className="mr-3">
 								<h2 className="mb-4 mt-4 font-semibold text-primary dark:text-white">Visão Geral por Orçamento</h2>
-								<Card className="h-auto w-full">
-									<CardHeader></CardHeader>
-									<CardContent>
-										<BudgetsView />
-									</CardContent>
-								</Card>
+								<GeneralViewByBudgets />
 							</div>
 							<div className="mr-3">
 								<h2 className="mb-4 mt-4 font-semibold text-primary dark:text-white">Visão Atual</h2>

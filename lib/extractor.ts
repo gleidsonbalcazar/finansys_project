@@ -84,14 +84,15 @@ export const extractTopExpenseCategories = (data: Array<Object>) => {
 
 function calculateRemainingLaunch(budgets: any[], launch: any[]): number {
 	let remainingTotal = 0;
-
 	budgets.forEach(budget => {
 			const correspondingLaunch = launch.filter(l => l.budget_id === budget.id && l.executed);
 
 			if (correspondingLaunch.length > 0) {
 					const executedLaunchTotal = correspondingLaunch.reduce((total, launch) => total + parseFloat(launch.value), 0);
-					const remainingAmount = parseFloat(budget.value) - executedLaunchTotal;
-					remainingTotal += remainingAmount;
+					if(executedLaunchTotal < parseFloat(budget.value)){
+						const remainingAmount = parseFloat(budget.value) - executedLaunchTotal;
+						remainingTotal += remainingAmount;
+					}
 			} else {
 					remainingTotal += parseFloat(budget.value);
 			}
@@ -189,6 +190,7 @@ export const extractActualView = (dataExpenses: Array<any>, dataBudgets: Array<a
 	const expensesExecuted: number = dataExpenses.filter(f=> f.executed).reduce((total, item) =>  total + parseFloat(item.value),0);
 	const expensesTarget: number = extractTotalByTypeBudget('expense', dataBudgets, 'value');//dataBudgets.filter(f => f.typeLaunch == 'expense').reduce((total, item) =>  total + parseFloat(item.value),0);
 	const remainingExpensesTotal: number = calculateRemainingLaunch(dataBudgets.filter(f => f.typeLaunch == 'expense'), dataExpenses);
+	console.log(remainingExpensesTotal)
 	const expensesNotPlanned: number = findUnassociatedExpenses(dataBudgets.filter(f => f.typeLaunch == 'expense' && f.isDefault), dataExpenses);
 
 	const incomesExecuted: number = dataIncome.filter(f=> f.executed).reduce((total, item) =>  total + parseFloat(item.value) , 0);
