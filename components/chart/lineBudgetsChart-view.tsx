@@ -58,6 +58,8 @@ export default function LineBudgetsChartView({ budgets }) {
 		return { label: budgets[key].name, value: budgets[key].id };
 	});
 
+	budgetData.sort((a,b) => a.label.localeCompare(b.label));
+
 	const data = {
 		expenses: expensesData,
 		income: incomeData,
