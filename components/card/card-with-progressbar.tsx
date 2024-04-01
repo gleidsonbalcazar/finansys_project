@@ -24,7 +24,7 @@ export default function CardWithProgressBar({ title, valueActual = 0, valueTarge
 					title="Executados / Para Executar"
 					className={`mt-1 overflow-hidden text-ellipsis whitespace-nowrap text-lg font-extrabold tabular-nums text-foreground `}
 				>
-					{ type == TypeSummaryEnum.Income || TypeSummaryEnum.Expense || TypeSummaryEnum.Investments ? valueActualformated + ' / ' + valueTargetformated : valueActualformated}
+					{ type == TypeSummaryEnum.Income || TypeSummaryEnum.Expense  ? valueActualformated + ' / ' + valueTargetformated : valueActualformated}
 					<ProgressBar valueActual={valueActual} valueTarget={valueTarget} type={type} />
 					<div className="space-y-1 mt-6">
 						<div className="flex items-center">

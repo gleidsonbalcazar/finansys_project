@@ -18,10 +18,8 @@ export async function GET(request: NextRequest) {
 					id:true,
 					name:true,
 					isDefault: true,
-					family_id: true,
 					value: true,
 					typeLaunch: true,
-					family: true,
 				},
 			});
 			return NextResponse.json(data);
@@ -49,7 +47,7 @@ export async function DELETE(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-	const { id, name, isDefault, family_id, typeLaunch, value } = await request.json();
+	const { id, name, isDefault,  typeLaunch, value } = await request.json();
 
 	return await checkAuth(async () => {
 		if (!id) {
@@ -57,7 +55,7 @@ export async function PUT(request: NextRequest) {
 		}
 		try {
 			await prisma.budget.update({
-				data: { name, isDefault, family_id, typeLaunch: typeLaunch, value: value },
+				data: { name, isDefault, typeLaunch: typeLaunch, value: value },
 				where: { id },
 			});
 			return NextResponse.json('updated', { status: 200 });

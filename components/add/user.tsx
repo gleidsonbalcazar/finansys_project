@@ -38,18 +38,11 @@ const initialState = {
 	date: todayDate,
 	name: '',
 	email: '',
-	family: '',
-	family_id: '',
 	currency: 'eur',
 	locale: 'pt',
 	isMainFamily: false,
 	isUserAdmin: false,
 };
-
-interface familyInterface {
-	id: string;
-	name: string;
-}
 
 const currencyData = Object.keys(data)
 	.map((key: string) => {
@@ -66,21 +59,11 @@ const currencyData = Object.keys(data)
 
 export default function AddUser({ show, onHide, mutate, selected, lookup }: AddUser) {
 	const user = useUser();
-	initialState.family = user.family.id;
 	const currency = `${user.currency}-${user.locale}`;
 	const [state, setState] = useState<any>(initialState);
 	const [loading, setLoading] = useState(false);
 	const { toast } = useToast();
 	const inputRef = useRef<any>(null);
-
-	const { data: familyInterface = [] } = useSWR(apiUrls.family.getFamily());
-
-	const data = {
-		family: familyInterface,
-	};
-
-	const familyData = Object.keys(data.family)
-	.map((key) => { return { label: data.family[key].name, value: data.family[key].id }; });
 
 	useEffect(() => {
 		inputRef.current?.focus();
@@ -230,15 +213,6 @@ export default function AddUser({ show, onHide, mutate, selected, lookup }: AddU
 							</div>
 						</div>
 					)}
-					<div className="mr-3">
-						<Label htmlFor="family">Família</Label>
-						<Combobox
-							data={familyData}
-							selected={state.family.id}
-							onChange={(value:any) => {
-								setState({...state, family_id: +value });
-							}} />
-					</div>
 					<div className="grid grid-cols-[50%,50%] gap-1 text-center mb-2 mt-2">
 						<div className="mr-3">
 							<Checkbox

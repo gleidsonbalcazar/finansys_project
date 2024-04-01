@@ -13,7 +13,7 @@ const supabaseAdmin = createClient<Database>(
 );
 
 export async function POST(request: NextRequest) {
-	const { name, email, currency, locale, family, password, isMainFamily, isUserAdmin } = await request.json();
+	const { name, email, currency, locale, password, isMainFamily, isUserAdmin } = await request.json();
 	return await checkAuth(async (user: any) => {
 		try {
 			let dataCreateToAuth = { email, password, email_confirm: true, user_metadata: { name: 'name' }};
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 				return NextResponse.json({ error, message: messages.request.failed }, { status: 500 });
 			}
 			await prisma.users.create({
-				data: { id: data.user.id, name, email, currency, locale, family_id: family, isMainFamily, isUserAdmin },
+				data: { id: data.user.id, name, email, currency, locale, isMainFamily, isUserAdmin },
 			});
 			return NextResponse.json('added', { status: 201 });
 		} catch (error) {

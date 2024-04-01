@@ -24,20 +24,6 @@ model expenses {
   user       users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-model investments {
-  name       String
-  id         Int      @id @default(autoincrement())
-  value      String   @default("0")
-  date       String
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  user_id    String   @db.Uuid
-  account_id Int
-  executed   Boolean  @default(false)
-  accounts   accounts @relation(fields: [account_id], references: [id], onDelete: Cascade)
-  user       users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-}
-
 model income {
   name       String
   date       String
@@ -58,7 +44,6 @@ model users {
   id           String         @id @db.Uuid
   name         String         @default("")
   email        String
-  family_id    Int
   created_at   DateTime       @default(now()) @db.Timestamptz(6)
   updated_at   DateTime       @default(now()) @updatedAt @db.Timestamptz(6)
   currency     String         @default("eur")
@@ -69,8 +54,6 @@ model users {
   expenses     expenses[]
   income       income[]
   userAccounts userAccounts[]
-  family       family         @relation(fields: [family_id], references: [id], onDelete: Cascade)
-  investments  investments[]
 }
 
 model accounts {
@@ -83,36 +66,25 @@ model accounts {
   expenses     expenses[]
   income       income[]
   userAccounts userAccounts[]
-  investments  investments[]
 }
 
 model userAccounts {
-  id         Int      @id @default(autoincrement())
-  user_id    String   @db.Uuid
-  account_id Int
-  accounts   accounts @relation(fields: [account_id], references: [id], onDelete: Cascade)
-  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-}
-
-model family {
-  id         Int      @id @default(autoincrement())
-  name       String
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  budgets    budget[]
-  users      users[]
+  id            Int      @id @default(autoincrement())
+  user_id       String   @db.Uuid
+  account_id    Int
+  isMainAccount Boolean  @default(true)
+  accounts      accounts @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  users         users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model budget {
   id         Int        @id @default(autoincrement())
   name       String
   isDefault  Boolean
-  family_id  Int
   created_at DateTime   @default(now()) @db.Timestamptz(6)
   updated_at DateTime   @default(now()) @updatedAt @db.Timestamptz(6)
   value      String     @default("0")
   typeLaunch TypeLaunch @default(expense)
-  family     family     @relation(fields: [family_id], references: [id], onDelete: Cascade)
   expenses   expenses[]
   income     income[]
 }

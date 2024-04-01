@@ -5,7 +5,6 @@ export type UserData = {
 	name: string;
 	currency: string;
 	locale:string;
-	family_id: string;
 };
 
 export const addUser = async (data: UserData) => {

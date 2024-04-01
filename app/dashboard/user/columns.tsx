@@ -26,14 +26,6 @@ export const columns: ColumnDef<UserInterface>[] = [
 		},
 	},
 	{
-		accessorKey: 'family',
-		header: ({ column }) => <DataTableColumnHeader column={column} title="Família" />,
-		cell: ({ row }) => {
-			const family = row.getValue<any>('family');
-			return <div className="font-medium">{family.name}</div>;
-		},
-	},
-	{
 		accessorKey: 'currency',
 		header: ({ column }) => <DataTableColumnHeader column={column} title="Moeda" />,
 		cell: (props) => {

@@ -51,6 +51,8 @@ interface BudgetInterface {
 interface AccountInterface {
 	id: string;
 	name: string;
+	user_id: string;
+	isMainAccount: boolean;
 }
 
 export default function AddExpense({ show, onHide, mutate, selected, lookup }: AddExpenseProps) {
@@ -73,13 +75,22 @@ export default function AddExpense({ show, onHide, mutate, selected, lookup }: A
 	.map((key) => { return { label: data.budget[key].name, value: data.budget[key].id }; });
 
 	const accountsData = Object.keys(data.account)
-	.map((key) => { return { label: data.account[key].name, value: data.account[key].id }; });
+	.map((key) => {
+		return {
+						label: data.account[key].name,
+						value: data.account[key].id,
+						user_id: data.account[key].userAccounts[0].user_id,
+						isMainAccount: data.account[key].userAccounts[0].isMainAccount
+					 };
+	});
 
 	useEffect(() => {
 		inputRef.current?.focus();
 	}, []);
 
-	useEffect(() => setState(selected.id ? selected : initialState), [selected]);
+	state.account_id = accountsData.find(f => f.user_id == user.id && f.isMainAccount)?.value;
+
+	useEffect(() => setState(selected.id ? selected: initialState), [selected]);
 
 	const onLookup = useMemo(() => {
 		const callbackHandler = (value: string) => {

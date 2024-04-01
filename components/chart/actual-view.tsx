@@ -21,17 +21,14 @@ interface ActualViewInterface {
 	expensesTarget: number;
 	expensesNotPlanned: number;
 	remainingExpensesTotal: number;
-	investmentsExecuted: number;
-	investmentsTarget: number;
-	investmentsNotPlanned: number;
 	remainingInvesmentsTotal: number;
 }
 
 export default function ActualView() {
 	const { data, loading } = useOverview();
 	const infoData = useMemo<ActualViewInterface>(
-		() => extractActualView(data.expenses, data.budgets, data.income, data.investments),
-		[data.expenses, data.budgets, data.income, data.investments]
+		() => extractActualView(data.expenses, data.budgets, data.income),
+		[data.expenses, data.budgets, data.income]
 	);
 
 	if (loading) {
@@ -59,15 +56,6 @@ export default function ActualView() {
 					icon={BadgeMinusIcon}
 					type={TypeSummaryEnum.Expense}
 				/>
-				{/* <CardWithProgressBar
-					title="Investimentos"
-					valueActual={infoData.investmentsExecuted}
-					valueTarget={infoData.investmentsTarget}
-					valueNotPlanned={infoData.investmentsNotPlanned}
-					valueRemaining={infoData.remainingInvesmentsTotal}
-					icon={Wallet2Icon}
-					type={TypeSummaryEnum.Investments}
-				/> */}
 			</div>
 			<div className="mt-4">
 				<BalanceCard title="Saldo nas Contas" accounts={data.accounts} icon={LandmarkIcon} />

@@ -186,7 +186,7 @@ export const extractProgressionBudgets = (dataExpenses: Array<any>,dataIncome: A
 	return Object.values(resultArray);
 };
 
-export const extractActualView = (dataExpenses: Array<any>, dataBudgets: Array<any>, dataIncome: Array<any>, dataInvestments: Array<any>) => {
+export const extractActualView = (dataExpenses: Array<any>, dataBudgets: Array<any>, dataIncome: Array<any>) => {
 	const expensesExecuted: number = dataExpenses.filter(f=> f.executed).reduce((total, item) =>  total + parseFloat(item.value),0);
 	const expensesTarget: number = extractTotalByTypeBudget('expense', dataBudgets, 'value');//dataBudgets.filter(f => f.typeLaunch == 'expense').reduce((total, item) =>  total + parseFloat(item.value),0);
 	const remainingExpensesTotal: number = calculateRemainingLaunch(dataBudgets.filter(f => f.typeLaunch == 'expense'), dataExpenses);
@@ -198,11 +198,6 @@ export const extractActualView = (dataExpenses: Array<any>, dataBudgets: Array<a
 	const remainingIncomesTotal: number = calculateRemainingLaunch(dataBudgets.filter(f => f.typeLaunch == 'income'), dataIncome);
 	const incomesNotPlanned: number = findUnassociatedExpenses(dataBudgets.filter(f => f.typeLaunch == 'income' && f.isDefault), dataIncome);
 
-	// const investmentsExecuted: number = dataInvestments.filter(f => f.executed).reduce((total, item) =>  total + parseFloat(item.value),0);
-	// const investmentsTarget: number = dataBudgets.filter(f => f.typeLaunch == 'investment').reduce((total, item) =>  total + parseFloat(item.value) , 0);
-	// const remainingInvestmentsTotal: number = calculateRemainingExpenses(dataBudgets.filter(f => f.typeLaunch == 'investment'), dataInvestments);
-	// const investmentsNotPlanned: number = findUnassociatedExpenses(dataBudgets.filter(f => f.typeLaunch == 'investment'), dataInvestments);
-
 
 	let dataMapOwner = {
 		expensesExecuted,
@@ -213,10 +208,6 @@ export const extractActualView = (dataExpenses: Array<any>, dataBudgets: Array<a
 		incomesTarget,
 		remainingIncomesTotal,
 		incomesNotPlanned,
-		// investmentsExecuted,
-		// investmentsTarget,
-		// remainingInvestmentsTotal,
-		// investmentsNotPlanned
 	} as any;
 
 	return dataMapOwner;

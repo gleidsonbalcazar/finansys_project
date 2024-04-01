@@ -19,6 +19,7 @@ export default function SignInForm() {
 		async function getUser() {
 			const { data } = await supabase.auth.getUser();
 			const { user } = data;
+			console.log(user);
 			if (user) {
 				router.push(url.app.overview);
 			}

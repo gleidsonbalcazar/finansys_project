@@ -32,16 +32,11 @@ interface AddBudget {
 
 const initialState = {
 	name: '',
-	family_id: '',
 	isDefault: false,
 	value: 0,
 	typeLaunch: 'expense',
 };
 
-interface familyInterface {
-	id: string;
-	name: string;
-}
 
 export default function AddBudget({ show, onHide, mutate, selected, lookup }: AddBudget) {
 	const [state, setState] = useState<any>(initialState);
@@ -49,14 +44,6 @@ export default function AddBudget({ show, onHide, mutate, selected, lookup }: Ad
 	const user = useUser();
 	const { toast } = useToast();
 	const inputRef = useRef<any>(null);
-	const { data: familyInterface = [] } = useSWR(apiUrls.family.getFamily());
-
-	const data = {
-		family: familyInterface,
-	};
-
-	const familyData = Object.keys(data.family)
-	.map((key) => { return { label: data.family[key].name, value: data.family[key].id }; });
 
 	useEffect(() => {
 		inputRef.current?.focus();
@@ -160,16 +147,6 @@ export default function AddBudget({ show, onHide, mutate, selected, lookup }: Ad
 							onChange={(event) => setState({ ...state, value: event.target.value.toString() })}
 							value={state.value.toString()}
 						/>
-					</div>
-					<div className="mr-3">
-						<Label htmlFor="family">Família</Label>
-						<Combobox
-							data={familyData}
-							selected={state.family_id}
-							onChange={(value:any) => {
-								setState({...state, family_id: +value });
-							}} />
-
 					</div>
 					<div className="mr-3">
 						<Checkbox
