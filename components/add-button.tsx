@@ -12,14 +12,12 @@ import shortcuts from 'constants/shortcuts';
 import AddExpense from './add/expenses';
 import AddIncome from './add/income';
 import AddUser from './add/user';
-import AddFamily from './add/family';
 import AddAccount from './add/account';
 import AddBudget from './add/budget';
-import AddInvestments from './add/investments';
 
 const openShortcutKey = Object.values(shortcuts.modal.open.shortcut);
 
-type TypeProps = 'expenses' | 'income' | 'user' | 'family' | 'account' | 'budget' | 'investments';
+type TypeProps = 'expenses' | 'income' | 'user' | 'account' | 'budget';
 
 type AddProps = {
 	mutate?: any;
@@ -72,20 +70,6 @@ export default function Add({ mutate, type, selected = {}, onHide, onLookup }: A
 					}}
 				/>
 			) : null}
-			{type === 'investments' ? (
-				<AddInvestments
-					lookup={(value: string) => {
-						if (onLookup) return onLookup(value);
-					}}
-					show={show}
-					selected={selected}
-					mutate={mutate}
-					onHide={() => {
-						if (onHide) onHide();
-						setShow(false);
-					}}
-				/>
-			) : null}
 			{type === 'income' ? (
 				<AddIncome
 					lookup={(value: string) => {
@@ -116,20 +100,6 @@ export default function Add({ mutate, type, selected = {}, onHide, onLookup }: A
 			) : null}
 			{type === 'user' ? (
 				<AddUser
-					lookup={(value: string) => {
-						if (onLookup) return onLookup(value);
-					}}
-					show={show}
-					selected={selected}
-					mutate={mutate}
-					onHide={() => {
-						if (onHide) onHide();
-						setShow(false);
-					}}
-				/>
-			) : null}
-				{type === 'family' ? (
-				<AddFamily
 					lookup={(value: string) => {
 						if (onLookup) return onLookup(value);
 					}}

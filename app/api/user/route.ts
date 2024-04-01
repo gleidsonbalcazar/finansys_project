@@ -29,7 +29,6 @@ export async function GET(request: NextRequest) {
 						locale: true,
 						email: true,
 						name: true,
-						family: true,
 						isMainFamily: true,
 						defaultTheme: true,
 						isUserAdmin: true
@@ -47,7 +46,6 @@ export async function GET(request: NextRequest) {
 					name:true,
 					currency: true,
 					locale: true,
-					family: true,
 					isMainFamily: true,
 					defaultTheme: true,
 					isUserAdmin: true
@@ -62,12 +60,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-	const { id, currency, locale, email, name, family_id, isMainFamily, isUserAdmin,  defaultTheme} = await request.json();
+	const { id, currency, locale, email, name, isMainFamily, isUserAdmin,  defaultTheme} = await request.json();
 	return await checkAuth(async (user: any) => {
 		try {
 
 			let userID = !id ? user.id: id;
-			let data = { name, currency, locale,email, family_id: family_id, isMainFamily, isUserAdmin, defaultTheme };
+			let data = { name, currency, locale,email, isMainFamily, isUserAdmin, defaultTheme };
 			await prisma.users.update({ data: data, where: { id: userID } });
 
 			const { error } = await supabaseAdmin.auth.admin.updateUserById(userID, { email })

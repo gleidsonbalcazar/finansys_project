@@ -3,13 +3,7 @@ export const qIncomes = (user: any, to: any, from: any) => {
 		date: { lte: to, gte: from },
 		user: {
 			AND: {
-				family: {
-					users: {
-						some: {
-							id: user.id,
-						},
-					},
-				},
+						id: user.id,
 			},
 		},
 	}

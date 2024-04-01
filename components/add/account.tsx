@@ -36,6 +36,7 @@ const initialState = {
 	name: '',
 	description: '',
 	user_id: '',
+	isMainAccount: true,
 	active: true
 };
 
@@ -62,9 +63,9 @@ export default function AddAccount({ show, onHide, mutate, selected, lookup }: A
 	};
 
 	const usersData = Object.keys(data.usersData)
-	.map((key) => { return { label: data.usersData[key].name, value: data.usersData[key].id }; });
+		.map((key) => { return { label: data.usersData[key].name, value: data.usersData[key].id }; });
 
-	useEffect(() => setState(selected.id ? { ...selected, user_id: selected.userAccounts[0].user_id } : initialState), [selected]);
+	useEffect(() => setState(selected.id ? { ...selected, user_id: selected.userAccounts[0].user_id, isMainAccount: selected.userAccounts[0].isMainAccount } : initialState), [selected]);
 
 	const onLookup = useMemo(() => {
 		const callbackHandler = (value: string) => {
@@ -106,22 +107,22 @@ export default function AddAccount({ show, onHide, mutate, selected, lookup }: A
 						if (!selected.id) setState({ ...initialState });
 					}}
 				>
-						<div className="relative">
-							<Label htmlFor="name">Nome</Label>
-							<Input
-								className="mt-1.5"
-								id="name"
-								placeholder="Nome"
-								maxLength={30}
-								required
-								ref={inputRef}
-								autoFocus
-								onChange={({ target }) => {
-									const { value } = target;
-								  setState({ ...state, name: value });
-								}}
-								value={state.name}
-							/>
+					<div className="relative">
+						<Label htmlFor="name">Nome</Label>
+						<Input
+							className="mt-1.5"
+							id="name"
+							placeholder="Nome"
+							maxLength={30}
+							required
+							ref={inputRef}
+							autoFocus
+							onChange={({ target }) => {
+								const { value } = target;
+								setState({ ...state, name: value });
+							}}
+							value={state.name}
+						/>
 					</div>
 					<div className="relative">
 						<Label htmlFor="description">Descrição</Label>
@@ -133,23 +134,33 @@ export default function AddAccount({ show, onHide, mutate, selected, lookup }: A
 							required
 							onChange={({ target }) => {
 								const { value } = target;
-									setState({ ...state, description: value });
-								}}
+								setState({ ...state, description: value });
+							}}
 							value={state.description}
 						/>
 					</div>
-					{ user.isUserAdmin && (
+					{user.isUserAdmin && (
 						<div className="mr-3">
 							<Label htmlFor="family">Usuário</Label>
 							<Combobox
-							data={usersData}
-							selected={state.user_id}
-							onChange={(value:any) => {
-								setState({...state, user_id: value });
-							}} />
-						</div> ) }
+								data={usersData}
+								selected={state.user_id}
+								onChange={(value: any) => {
+									setState({ ...state, user_id: value });
+								}} />
+						</div>)}
 					<div className="mr-3">
-					<Checkbox
+						<Checkbox
+							onCheckedChange={(checked: boolean) => {
+								setState({ ...state, isMainAccount: checked });
+							}}
+							checked={state.isMainAccount}
+							className="mr-3 p-0 hover:bg-transparent hover:opacity-70"
+						/>
+						<Label htmlFor="userAdmin">Conta Principal</Label>
+					</div>
+					<div className="mr-3">
+						<Checkbox
 							onCheckedChange={(checked: boolean) => {
 								setState({ ...state, active: checked });
 							}}

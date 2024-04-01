@@ -1,14 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-
-
 import { checkAuth } from 'lib/auth';
 import prisma from 'lib/prisma';
-
-
-
 import messages from 'constants/messages';
-import { qAccounts } from './queries/qAccounts';
 
 export async function GET(request: NextRequest) {
 	const { searchParams } = request.nextUrl;
@@ -17,7 +10,6 @@ export async function GET(request: NextRequest) {
 	if (balance != '') {
 		return await checkAuth(async (user: any) => {
 			const accounts = await prisma.accounts.findMany({
-				where: qAccounts(user),
 				select: {
 					id: true,
 					name: true,
@@ -106,7 +98,6 @@ export async function GET(request: NextRequest) {
 		return await checkAuth(async (user: any) => {
 			try {
 				const data = await prisma.accounts.findMany({
-					where: qAccounts(user),
 					orderBy: { updated_at: 'desc' },
 					select: {
 						id: true,
@@ -116,14 +107,10 @@ export async function GET(request: NextRequest) {
 							select: {
 								id: true,
 								user_id: true,
+								isMainAccount: true,
 								users: {
 									select: {
 										name: true,
-										family: {
-											select: {
-												name: true,
-											},
-										},
 									},
 								},
 							},

@@ -32,9 +32,6 @@ const Info = ({ value }: { value: number }) => {
 export default function Summary() {
 	const { data, loading } = useOverview();
 
-	const totalInvestmentsExecuted = data.investments.filter((a: { executed: boolean; }) => a.executed).reduce((acc: any, { value }: any) => Number(value) + acc, 0);
-	const totalInvestmentsToExecute = data.investments.filter((a: { executed: boolean; }) => !a.executed).reduce((acc: any, { value }: any) => Number(value) + acc, 0);
-
 	const totalExpensesExecuted = data.expenses.filter((a: { executed: boolean; }) => a.executed).reduce((acc: any, { value }: any) => Number(value) + acc, 0);
 	const totalExpensesToExecute = data.expenses.filter((a: { executed: boolean; }) => !a.executed).reduce((acc: any, { value }: any) => Number(value) + acc, 0);
 
@@ -84,12 +81,6 @@ export default function Summary() {
 						icon={BadgeMinusIcon}
 						title="Despesas Planejadas"
 						value={budgetExpensesPlanned}
-					/>
-					<SummaryCard
-						icon={BadgePlusIcon}
-						title="Investimentos Executados / Não Executados"
-						value={totalInvestmentsExecuted}
-						value2={totalInvestmentsToExecute}
 					/>
 				</div>
 			)}

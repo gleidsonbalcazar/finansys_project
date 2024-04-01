@@ -38,20 +38,20 @@ export const columns: ColumnDef<Account>[] = [
 	},
 	{
 		accessorKey: 'userAccounts',
-		header: ({ column }) => <DataTableColumnHeader column={column} title="Família" />,
-		cell: ({ row }) => {
-			const userAccounts = row.getValue<any>('userAccounts');
-			const family = userAccounts[0].users.family.name;
-			return <div className="font-medium">{family}</div>;
-		},
-	},
-	{
-		accessorKey: 'userAccounts2',
 		header: ({ column }) => <DataTableColumnHeader column={column} title="Usuário" />,
 		cell: ({ row }) => {
 			const userAccounts = row.getValue<any>('userAccounts');
 			const user = userAccounts[0].users.name;
 			return <div className="font-medium">{user}</div>;
+		},
+	},
+	{
+		accessorKey: 'userAccounts2',
+		header: ({ column }) => <DataTableColumnHeader column={column} title="Conta Principal" />,
+		cell: ({ row }) => {
+			const userAccounts = row.getValue<any>('userAccounts');
+			const isMainAccount = userAccounts[0].isMainAccount;
+			return <div className="font-medium">{isMainAccount ? (<CheckIcon />) : <X />}</div>;
 		},
 	},
 	{

@@ -5,7 +5,7 @@ import messages from 'constants/messages';
 
 
 export async function POST(request: NextRequest) {
-	const { name, description, active, user } = await request.json();
+	const { name, description, active, user, isMainAccount } = await request.json();
 	return await checkAuth(async (userLogged: any) => {
 		try {
 			const createdAccount = await prisma.accounts.create({
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 			});
 
 			if(createdAccount) {
-				await prisma.userAccounts.create({ data : { user_id: user == null ? userLogged.id : user, account_id: createdAccount.id}})
+				await prisma.userAccounts.create({ data : { user_id: user == null ? userLogged.id : user, account_id: createdAccount.id, isMainAccount}})
 			}
 
 			return NextResponse.json('added', { status: 201 });

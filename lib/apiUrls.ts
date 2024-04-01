@@ -7,11 +7,6 @@ export const apiUrls = {
 		usage: 'api/user/usage',
 		getUsers: () => '/api/user?option=all',
 	},
-	family: {
-		add: '/api/family/add',
-		modify: '/api/family',
-		getFamily: () => `/api/family`,
-	},
 	budget: {
 		add: '/api/budget/add',
 		modify: '/api/budget',
@@ -32,12 +27,6 @@ export const apiUrls = {
 		modify: '/api/expenses',
 		execute: '/api/expenses/execute',
 		getExpenses: ({ from, to }: { from: string; to: string }) => `/api/expenses?from=${from}&to=${to}`,
-	},
-	investments: {
-		add: '/api/investments/add',
-		modify: '/api/investments',
-		execute: '/api/investments/execute',
-		getinvestments: ({ from, to }: { from: string; to: string }) => `/api/investments?from=${from}&to=${to}`,
 	},
 	income: {
 		add: '/api/income/add',

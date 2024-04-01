@@ -14,13 +14,12 @@ import { Separator } from 'components/ui/separator';
 import { cn } from 'lib/utils';
 import shortcuts from 'constants/shortcuts';
 import SidebarLink from './link';
-import { BadgeMinusIcon, BadgePlusIcon, GanttChartIcon, LandmarkIcon, PersonStanding, PieChartIcon, UsersIcon, Wallet2Icon } from 'lucide-react';
+import { BadgeMinusIcon, BadgePlusIcon, GanttChartIcon, LandmarkIcon, PersonStanding, PieChartIcon } from 'lucide-react';
 
 const dashboardLinks = [
 	{ name: 'Visão Geral', href: '/', Icon: PieChartIcon, shortcutText: shortcuts.menu.overview.shortcut },
 	{ name: 'Receitas', href: '/income', Icon: BadgePlusIcon, shortcutText: shortcuts.menu.income.shortcut },
 	{ name: 'Despesas', href: '/expenses', Icon: BadgeMinusIcon, shortcutText: shortcuts.menu.expenses.shortcut },
-	{ name: 'Investimentos', href: '/investments', Icon: Wallet2Icon, shortcutText: shortcuts.menu.investments.shortcut },
 	{
 		name: 'Orçamentos',
 		href: '/budgets',
@@ -32,12 +31,6 @@ const dashboardLinks = [
 		href: '/accounts',
 		Icon: LandmarkIcon,
 		shortcutText: shortcuts.menu.accounts.shortcut,
-	},
-	{
-		name: 'Famílias',
-		href: '/family',
-		Icon: UsersIcon,
-		shortcutText: shortcuts.menu.family.shortcut,
 	},
 	{
 		name: 'Usuários',
