@@ -35,7 +35,7 @@ export default function CardWithProgressBar({ title, valueActual = 0, valueTarge
 						</div>
 						<div className="flex items-center">
 							<div className="ml-0">
-								<p className="text-sm font-normal leading-none">Ainda por Executar</p>
+								<p className="text-sm font-normal leading-none">Por Executar</p>
 							</div>
 							<div className="ml-auto font-normal text-base">{valueRemainingformated}</div>
 						</div>
